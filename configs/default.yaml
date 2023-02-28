@@ -1,0 +1,23 @@
+trainer:
+  _target_: pytorch_lightning.Trainer
+  min_epochs: 1
+  max_epochs: 10
+  accelerator: cpu
+  devices: 1
+  check_val_every_n_epoch: 1
+  deterministic: False
+
+model:
+  __target__: src.model.LitClassifier
+  learning_rate: 0.001
+
+data:
+  __target__: src.datamodule.MyDataModule
+  batch_size: 32
+
+logger:
+  project: "template"
+  log_model: False # upload lightning ckpts
+  group: ""
+  tags: []
+  job_type: ""
