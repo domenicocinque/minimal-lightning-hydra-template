@@ -1,3 +1,19 @@
+task_name: "train"
+
+paths:
+  root_dir: .
+  data_dir: ${paths.root_dir}/data/
+  log_dir: ${paths.root_dir}/logs/
+  output_dir: ${hydra:runtime.output_dir}
+  work_dir: ${hydra:runtime.cwd}
+
+hydra:
+  run:
+    dir: ${paths.log_dir}/${task_name}/runs/${now:%Y-%m-%d}_${now:%H-%M-%S}
+  sweep:
+    dir: ${paths.log_dir}/${task_name}/multiruns/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+
 trainer:
   _target_: pytorch_lightning.Trainer
   min_epochs: 1
@@ -8,16 +24,23 @@ trainer:
   deterministic: False
 
 model:
-  __target__: src.model.LitClassifier
+  _target_: src.model.LitClassifier
   learning_rate: 0.001
 
 data:
-  __target__: src.datamodule.MyDataModule
+  _target_: src.datamodule.MyDataModule
   batch_size: 32
 
 logger:
+  _target_: pytorch_lightning.loggers.wandb.WandbLogger
+  save_dir: "logs"
+  offline: False
+  id: null # pass correct id to resume experiment!
+  anonymous: null # enable anonymous logging
   project: "template"
   log_model: False # upload lightning ckpts
+  prefix: "" # a string to put at the beginning of metric keys
+  # entity: "" # set to name of your wandb team
   group: ""
   tags: []
   job_type: ""
