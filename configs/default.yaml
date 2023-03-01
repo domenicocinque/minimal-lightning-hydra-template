@@ -17,7 +17,7 @@ hydra:
 trainer:
   _target_: pytorch_lightning.Trainer
   min_epochs: 1
-  max_epochs: 10
+  max_epochs: 1
   accelerator: cpu
   devices: 1
   check_val_every_n_epoch: 1
@@ -25,6 +25,7 @@ trainer:
 
 model:
   _target_: src.model.LitClassifier
+  hidden_dim: 16
   learning_rate: 0.001
 
 data:

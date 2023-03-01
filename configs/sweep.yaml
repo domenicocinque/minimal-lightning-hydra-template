@@ -1,0 +1,14 @@
+program: main.py
+method: bayes
+metric:
+  goal: maximize
+  name: val/loss_epoch
+parameters:
+  model.learning_rate:
+    values: [0.01, 0.001, 0.0001]
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - ${args_no_hyphens}
